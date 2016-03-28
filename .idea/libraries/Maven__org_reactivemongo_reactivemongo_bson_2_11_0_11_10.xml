@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.reactivemongo:reactivemongo-bson_2.11:0.11.10">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/reactivemongo/reactivemongo-bson_2.11/0.11.10/reactivemongo-bson_2.11-0.11.10.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/reactivemongo/reactivemongo-bson_2.11/0.11.10/reactivemongo-bson_2.11-0.11.10-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/reactivemongo/reactivemongo-bson_2.11/0.11.10/reactivemongo-bson_2.11-0.11.10-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
