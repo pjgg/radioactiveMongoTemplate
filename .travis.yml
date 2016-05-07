@@ -1,5 +1,13 @@
 sudo: required
-language: scala
-
+language: java
+script: mvn clean install -P acceptance
+jdk:
+  - oraclejdk8
 services:
   - docker
+branches:
+ only:
+  - master
+notifications:
+  email:
+  - pablo.gonzalez.granados@gmail.com
