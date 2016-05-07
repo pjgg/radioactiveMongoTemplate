@@ -270,6 +270,9 @@
 
         <profile>
             <id>acceptance</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <build>
                 <testResources>
                     <testResource>
