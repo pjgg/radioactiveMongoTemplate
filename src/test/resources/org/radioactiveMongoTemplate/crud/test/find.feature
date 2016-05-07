@@ -2,6 +2,7 @@ Feature: find a mongo record
 
   As a developer I would like to retrieve records from mongo
 
+  @setupMongo
   @cleanRecords
   Scenario: find all records
     Given a test database with a person collection

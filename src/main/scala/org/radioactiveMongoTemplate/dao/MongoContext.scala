@@ -21,7 +21,7 @@ object MongoContext {
     ReadPreference.primary
   )
 
-   val connection = driver.connection(List("mongodb:27017"), options =  connectionOptions)
+   val connection = driver.connection(List("localhost:27017"), options =  connectionOptions)
 
    val maxBulkSize = 1000
 

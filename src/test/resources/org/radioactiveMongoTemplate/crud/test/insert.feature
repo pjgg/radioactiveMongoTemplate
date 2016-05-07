@@ -2,6 +2,7 @@ Feature: create a mongo record
 
   As a developer I would like to insert records into mongo
 
+  @setupMongo
   @cleanRecords
   Scenario: successful insert record
     Given a test database with a person collection
@@ -9,6 +10,7 @@ Feature: create a mongo record
     Then I check that the record was stored
     And the stored person name is "Pablo"
 
+  @setupMongo
   @cleanRecords
   Scenario: successful insert bulk record
     Given a test database with a person collection

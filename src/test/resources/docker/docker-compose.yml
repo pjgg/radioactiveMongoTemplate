@@ -1,0 +1,12 @@
+mongodb:
+  build: .
+  container_name: mongodb
+  ports:
+      - 27017:27017
+  environment:
+    LC_ALL: C.UTF-8
+    DNSDOCK_NAME: db
+    DNSDOCK_IMAGE: mongodb
+
+
+
