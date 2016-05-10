@@ -1,10 +1,6 @@
 package org.radioactiveMongoTemplate.crud.util
 
-import java.io.File
-import java.util.ResourceBundle
-
 import org.apache.commons.configuration.PropertiesConfiguration
-
 
 trait AcceptanceTestConfiguration  {
 

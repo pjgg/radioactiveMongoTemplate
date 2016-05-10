@@ -1,6 +1,6 @@
 package org.radioactiveMongoTemplate.crud.test
 
-import cucumber.api.scala.{EN, ScalaDsl}
+import cucumber.api.scala.{EN}
 import org.junit.Assert._
 import org.radioactiveMongoTemplate.crud.util.MongoTemplateUtilsTest
 import org.scalatest.Matchers
