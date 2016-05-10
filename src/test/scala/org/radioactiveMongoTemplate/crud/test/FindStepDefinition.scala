@@ -16,12 +16,35 @@ class FindStepDefinition extends Matchers with ShouldVerb with ScalaDsl with Sca
   Then("""^I request to findAll records$"""){ () =>
     mongoTemplateUtilsTest.people =  mongoTemplateUtilsTest.personDao.findAll()
   }
-  Then("""^check that (\d+) records was stored with name "([^"]*)"$"""){ (expectedAmount:Int, expectedName:String) =>
+
+  Then("""^I request to findOne$"""){ () =>
+    mongoTemplateUtilsTest.person = mongoTemplateUtilsTest.personDao.findOne()
+  }
+
+  Then("""^check that (\d+) records was retrieved with name "([^"]*)"$"""){ (expectedAmount:Int, expectedName:String) =>
     whenReady(mongoTemplateUtilsTest.people, timeout(5 seconds)){
       result => {
         assertTrue(result.size == expectedAmount)
         result.toStream.map(person=> person.name.equalsIgnoreCase(expectedName))
       }
+    }
+  }
+
+  Then("""^check that person has name "([^"]*)"$"""){ (expectedName:String) =>
+    whenReady(mongoTemplateUtilsTest.person, timeout(5 seconds)){
+      result => {
+        result.get.name should be (expectedName)
+      }
+    }
+  }
+
+  Then("""^I request to countAll$"""){ () =>
+    mongoTemplateUtilsTest.intResult = mongoTemplateUtilsTest.personDao.count()
+  }
+
+  Then("""^check that person collection has (\d+) of records$"""){ (expectedAmount:Int) =>
+    whenReady(mongoTemplateUtilsTest.intResult, timeout(5 seconds)){
+      result => assertTrue(result == expectedAmount)
     }
   }
 

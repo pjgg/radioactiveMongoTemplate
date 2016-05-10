@@ -16,7 +16,9 @@ class MongoTemplateUtilsTest extends ScalaDsl with AcceptanceTestConfiguration{
 
   var intResult: Future[Int] = Future(0)
 
-  var people :Future[List[Person]] = Future { List[Person]()}
+  var people :Future[List[Person]] = Future (List[Person]())
+
+  var person : Future[Option[Person]] = Future(None)
 
   After("@cleanRecords"){ scenario : Scenario =>
     personDao.dropCollection()
