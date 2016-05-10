@@ -8,17 +8,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.sys.process._
 
 
-class MongoTemplateUtilsTest extends ScalaDsl with AcceptanceTestConfiguration{
+trait MongoTemplateUtilsTest extends ScalaDsl with AcceptanceTestConfiguration{
 
-  var personDao = new PersonDaoImpl()
-
-  var booleanResult: Future[Boolean] = Future(true)
-
-  var intResult: Future[Int] = Future(0)
-
-  var people :Future[List[Person]] = Future (List[Person]())
-
-  var person : Future[Option[Person]] = Future(None)
+  val personDao = new PersonDaoImpl()
 
   After("@cleanRecords"){ scenario : Scenario =>
     personDao.dropCollection()

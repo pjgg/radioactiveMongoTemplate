@@ -9,43 +9,41 @@ import org.scalatest.words.ShouldVerb
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class FindStepDefinition extends Matchers with ShouldVerb with ScalaDsl with ScalaFutures with EN {
+class FindStepDefinition extends Matchers with ShouldVerb with ScalaFutures with EN with MongoTemplateUtilsTest {
 
-  var mongoTemplateUtilsTest = new MongoTemplateUtilsTest
+  Then("""^I findAll records and check that (\d+) records was retrieved with name "([^"]*)"$"""){
+    (expectedAmount:Int, expectedName:String) =>
 
-  Then("""^I request to findAll records$"""){ () =>
-    mongoTemplateUtilsTest.people =  mongoTemplateUtilsTest.personDao.findAll()
-  }
-
-  Then("""^I request to findOne$"""){ () =>
-    mongoTemplateUtilsTest.person = mongoTemplateUtilsTest.personDao.findOne()
-  }
-
-  Then("""^check that (\d+) records was retrieved with name "([^"]*)"$"""){ (expectedAmount:Int, expectedName:String) =>
-    whenReady(mongoTemplateUtilsTest.people, timeout(5 seconds)){
-      result => {
-        assertTrue(result.size == expectedAmount)
-        result.toStream.map(person=> person.name.equalsIgnoreCase(expectedName))
+      val people = personDao.findAll()
+      whenReady(people, timeout(5 seconds)){
+        result => {
+          assertTrue(s"retieve:${result.size} expected: $expectedAmount",result.size == expectedAmount)
+          result.toStream.map(person=> person.name.equalsIgnoreCase(expectedName))
+        }
       }
-    }
   }
 
-  Then("""^check that person has name "([^"]*)"$"""){ (expectedName:String) =>
-    whenReady(mongoTemplateUtilsTest.person, timeout(5 seconds)){
-      result => {
-        result.get.name should be (expectedName)
+
+  Then("""^I findOne and check that the retrieved person has name "([^"]*)"$"""){
+    (expectedName:String) =>
+
+      val person = personDao.findOne()
+      whenReady(person, timeout(5 seconds)){
+        result => {
+          result.get.name should be (expectedName)
+        }
       }
-    }
   }
 
-  Then("""^I request to countAll$"""){ () =>
-    mongoTemplateUtilsTest.intResult = mongoTemplateUtilsTest.personDao.count()
-  }
 
-  Then("""^check that person collection has (\d+) of records$"""){ (expectedAmount:Int) =>
-    whenReady(mongoTemplateUtilsTest.intResult, timeout(5 seconds)){
-      result => assertTrue(result == expectedAmount)
-    }
+  Then("""^I countAll people and check that the amount of people is (\d+)$"""){
+    (expectedAmount:Int) =>
+      val peopleAmount = personDao.count()
+      whenReady(peopleAmount, timeout(5 seconds)){
+        result => {
+          result should be (expectedAmount)
+        }
+      }
   }
 
 }
