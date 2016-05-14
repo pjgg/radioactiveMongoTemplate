@@ -60,8 +60,8 @@ abstract class AbstractMongoTemplate[E,K]
     collection.insert(entity, writeConcern).map( writeResult => writeResult)
   }
 
-  def update(query: BSONDocument,update: E, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern,
-             upsert: Boolean = false,multi: Boolean = false)(implicit ec: ExecutionContext): Future[WriteResult] = {
+  def update(query: BSONDocument,update: E,
+             upsert: Boolean = false,multi: Boolean = false, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[WriteResult] = {
     collection.update(query, update, writeConcern, upsert, multi)
   }
 

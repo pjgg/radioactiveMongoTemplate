@@ -7,6 +7,7 @@ import org.junit.Assert._
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.words.ShouldVerb
+import reactivemongo.bson.BSONObjectID
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -35,6 +36,16 @@ class InsertStepDefinitions extends Matchers with ShouldVerb with ScalaFutures w
     whenReady(amtInserted, timeout(5 seconds)){
       result => assertTrue(result == amount)
     }
+  }
+
+  When("""^I a person record with name "([^"]*)" an Id "([^"]*)"$"""){
+    (name:String, id:String) =>
+      val person = Person(_id = BSONObjectID(id),name = name, age = 18)
+      val errors = personDao.insert(person).map(result => result.hasErrors)
+      whenReady(errors, timeout(5 seconds)){
+        errors => errors should be (false)
+      }
+
   }
 
 }

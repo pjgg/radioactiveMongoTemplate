@@ -26,8 +26,8 @@ trait RadioactiveMongoTemplate[E,K]  {
 
   def insert(entity: E, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext):Future[WriteResult]
 
-  /*def update(query: BSONDocument,update: E, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern,
-             upsert: Boolean = false,multi: Boolean = false): Future[WriteResult] */
+  def update(query: BSONDocument,update: E,
+             upsert: Boolean = false,multi: Boolean = false, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[WriteResult]
 
   def updateById(id: K,update: E, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[WriteResult]
 
