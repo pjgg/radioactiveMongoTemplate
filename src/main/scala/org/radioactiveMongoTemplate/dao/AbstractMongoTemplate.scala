@@ -4,7 +4,7 @@ import reactivemongo.api.QueryOpts
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.api.indexes.Index
 import reactivemongo.bson._
-import reactivemongo.api.commands.{ GetLastError, WriteResult }
+import reactivemongo.api.commands.{UpdateWriteResult, WriteResult, GetLastError}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -65,8 +65,8 @@ abstract class AbstractMongoTemplate[E,K]
     collection.update(query, update, writeConcern, upsert, multi)
   }
 
-  def updateById(id: K,update: E, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[WriteResult] = {
-    collection.update(BSONDocument("_id" -> id), update, writeConcern)
+  def updateById(id: K,update: E, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[SimpleRespone[K]] = {
+    collection.update(BSONDocument("_id" -> id), update, writeConcern).map(updateWriteResult=>makeSimpleResponse(id,updateWriteResult))
   }
 
   def retrieveIndexes()(implicit ec: ExecutionContext): Future[List[Index]] = {
@@ -77,15 +77,14 @@ abstract class AbstractMongoTemplate[E,K]
     collection.indexesManager.ensure(index)
   }
 
-  def save(entity: E, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext):Future[WriteResult] = {
+  def save(entity: E, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec:
+  ExecutionContext):Future[SimpleRespone[K]] = {
 
     for {
       doc <- Future(entityWriter write entity)
       id <- Future(doc.getAs[K]("_id").get)
-      res <- {
-        collection.update(BSONDocument("_id" -> id), entity, writeConcern, true)
-      }
-    } yield res
+      res <-  collection.update(BSONDocument("_id" -> id), entity, writeConcern, true)
+    } yield  makeSimpleResponse(id,res)
 
   }
 
@@ -115,5 +114,13 @@ abstract class AbstractMongoTemplate[E,K]
 
     collection.bulkInsert(documents.map(entityWriter.write(_)).toStream,
       true, MongoContext.connectionOptions.writeConcern, bulkSize, bulkByteSize) map(result => result.n)
+  }
+
+  private def makeSimpleResponse(id :K, writeResult: UpdateWriteResult): SimpleRespone[K]={
+
+    if(writeResult.upserted.isEmpty)
+      SimpleRespone[K](writeResult.code, !writeResult.ok, writeResult.errmsg, Option(id))
+    else
+      SimpleRespone[K](writeResult.code, !writeResult.ok, writeResult.errmsg, Option(writeResult.upserted(0)._id.asInstanceOf[K]))
   }
 }

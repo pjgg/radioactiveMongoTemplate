@@ -29,13 +29,13 @@ trait RadioactiveMongoTemplate[E,K]  {
   def update(query: BSONDocument,update: E,
              upsert: Boolean = false,multi: Boolean = false, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[WriteResult]
 
-  def updateById(id: K,update: E, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[WriteResult]
-
+  def updateById(id: K,update: E, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[SimpleRespone[K]]
+  
   def retrieveIndexes()(implicit ec: ExecutionContext): Future[List[Index]]
 
   def ensureIndexes(index: Index)(implicit ec: ExecutionContext): Future[Boolean]
 
-  def save(entity: E, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext):Future[WriteResult]
+  def save(entity: E, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec:ExecutionContext):Future[SimpleRespone[K]]
 
   def dropCollection()(implicit ec: ExecutionContext): Future[Boolean]
 
@@ -51,3 +51,5 @@ trait RadioactiveMongoTemplate[E,K]  {
   def bulkInsert( documents: TraversableOnce[E], bulkSize: Int = MongoContext.maxBulkSize,
                   bulkByteSize: Int = MongoContext.maxBsonSize)(implicit ec: ExecutionContext): Future[Int]
 }
+
+case class SimpleRespone[K](code:Option[Int], hasErrors:Boolean, msg:Option[String], id:Option[K])

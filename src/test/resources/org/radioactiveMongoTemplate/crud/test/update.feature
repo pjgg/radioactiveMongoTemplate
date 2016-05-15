@@ -9,6 +9,12 @@ Feature: update a mongo record
     When I a person record with name "Pablo" an Id "507f191e810c19729de860ea"
     Then I update person with Id "507f191e810c19729de860ea" and swap his name to "Miguel" upsert "false" and multi "false"
 
+  @cleanRecords
+  Scenario: updateById a records
+    Given a test database with a person collection
+    When I a person record with name "Pablo" an Id "507f191e810c19729de860ea"
+    Then I updateById "507f191e810c19729de860ea" a peson and swap his name to "Miguel"
+
 
 
 

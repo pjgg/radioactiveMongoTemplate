@@ -6,6 +6,7 @@ import org.radioactiveMongoTemplate.crud.util.MongoTemplateUtilsTest
 import org.scalatest.Matchers
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.words.ShouldVerb
+import reactivemongo.bson.BSONObjectID
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -13,6 +14,15 @@ class DeleteStepDefinition extends Matchers with ShouldVerb with ScalaFutures wi
 
   Then("""^I deleteAll records$"""){ () =>
     val result = personDao.removeAll()
+    whenReady(result, timeout(5 seconds)){
+      result => {
+        result.hasErrors should be (false)
+      }
+    }
+  }
+
+  Then("""^I deleteById "([^"]*)"$"""){ (id:String) =>
+    val result = personDao.removeById(BSONObjectID(id))
     whenReady(result, timeout(5 seconds)){
       result => {
         result.hasErrors should be (false)
