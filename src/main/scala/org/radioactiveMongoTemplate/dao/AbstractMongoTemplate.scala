@@ -1,5 +1,6 @@
 package org.radioactiveMongoTemplate.dao
 
+import org.bson.BsonDocument
 import reactivemongo.api.QueryOpts
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.api.indexes.Index
@@ -42,7 +43,7 @@ abstract class AbstractMongoTemplate[E,K]
    collection.find(BSONDocument("$in" -> ids)).cursor[E](MongoContext.connectionOptions.readPreference).collect[List]()
   }
 
-  def findAndUpdate(query: BSONDocument, update: BSONDocument, sort: BSONDocument = BSONDocument.empty,
+  def findAndUpdate(query: BSONDocument, update: E, sort: BSONDocument = BSONDocument.empty,
                      fetchNewObject: Boolean = false,upsert: Boolean = false)(implicit ec: ExecutionContext): Future[Option[E]] ={
     collection.findAndUpdate(query, update, fetchNewObject, upsert).map(_.result[E])
   }
@@ -60,9 +61,10 @@ abstract class AbstractMongoTemplate[E,K]
     collection.insert(entity, writeConcern).map( writeResult => writeResult)
   }
 
-  def update(query: BSONDocument,update: E,
-             upsert: Boolean = false,multi: Boolean = false, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[WriteResult] = {
-    collection.update(query, update, writeConcern, upsert, multi)
+  def update(query: BSONDocument,update: E, upsert: Boolean = false,multi: Boolean = false, writeConcern: GetLastError
+  = MongoContext
+    .connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[UpsertSimpleRespone[K]] = {
+    collection.update(query, update, writeConcern, upsert, multi).map(updateWriteResult=>makeUpsertSimpleResponse(updateWriteResult))
   }
 
   def updateById(id: K,update: E, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[SimpleRespone[K]] = {
@@ -122,5 +124,14 @@ abstract class AbstractMongoTemplate[E,K]
       SimpleRespone[K](writeResult.code, !writeResult.ok, writeResult.errmsg, Option(id))
     else
       SimpleRespone[K](writeResult.code, !writeResult.ok, writeResult.errmsg, Option(writeResult.upserted(0)._id.asInstanceOf[K]))
+  }
+
+  private def makeUpsertSimpleResponse(writeResult: UpdateWriteResult): UpsertSimpleRespone[K]={
+
+    if(writeResult.upserted.isEmpty)
+      UpsertSimpleRespone[K](writeResult.code, !writeResult.ok, writeResult.errmsg, List.empty[K])
+    else{
+      UpsertSimpleRespone[K](writeResult.code, !writeResult.ok, writeResult.errmsg, writeResult.upserted.map(upserted=> upserted._id.asInstanceOf[K]).toList)
+    }
   }
 }

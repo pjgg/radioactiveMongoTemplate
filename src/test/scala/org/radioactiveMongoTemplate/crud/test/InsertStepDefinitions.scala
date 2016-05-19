@@ -72,4 +72,15 @@ class InsertStepDefinitions extends Matchers with ShouldVerb with ScalaFutures w
       }
   }
 
+  When("""^I create person with age (\d+) and name "([^"]*)"$"""){
+    (age:Int, name:String) =>
+
+      val person = Person(name = name, age = age)
+      val errors = personDao.insert(person).map(result => result.hasErrors)
+      whenReady(errors, timeout(5 seconds)){
+        errors => errors should be (false)
+      }
+
+  }
+
 }

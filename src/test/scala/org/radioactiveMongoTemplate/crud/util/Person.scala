@@ -7,6 +7,7 @@ case class Person( _id: BSONObjectID = BSONObjectID.generate,
                    name: String,
                    age: Int)
 
+
 object Person {
   implicit val personHandler = Macros.handler[Person]
 }

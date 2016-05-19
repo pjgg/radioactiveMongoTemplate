@@ -1,12 +1,22 @@
 package org.radioactiveMongoTemplate.crud.test
 
+import java.io.ByteArrayOutputStream
+
+import reactivemongo.bson._
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import cucumber.api.DataTable
 import cucumber.api.scala.EN
-import org.radioactiveMongoTemplate.crud.util.{Person, MongoTemplateUtilsTest}
+import org.bson.BsonDocument
+import org.json4s.jackson.Json
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
+import org.radioactiveMongoTemplate.crud.util.{ Person, MongoTemplateUtilsTest}
 import org.scalatest.Matchers
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.words.ShouldVerb
-import reactivemongo.bson.{BSONObjectID, BSONDocument}
 import scala.concurrent.duration._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class UpdateStepDefinition extends Matchers with ShouldVerb with ScalaFutures with EN with MongoTemplateUtilsTest{
@@ -39,4 +49,19 @@ class UpdateStepDefinition extends Matchers with ShouldVerb with ScalaFutures wi
   }
 
 
+  Then("""^I findAndUpdate name to "([^"]*)" and age to (\d+) by "([^"]*)" and check that (\d+) was updated$"""){
+    (updatedName: String, updatedAge: Int, query: String, expectedNumberOfEntities: Int) =>
+
+      val person = Person(name = updatedName, age = updatedAge)
+      implicit val formats = org.json4s.DefaultFormats
+      val map = parse(query.replace("'","\"")).extract[Map[String, Any]]
+      val bsonQuery:BSONDocument = writeObject(map)
+
+      val result = personDao.findAndUpdate(bsonQuery, person)
+      whenReady(result, timeout(5 seconds)) {
+        result =>
+          result.size should be (expectedNumberOfEntities)
+        //  result.contains(person) should be (true)
+      }
+  }
 }

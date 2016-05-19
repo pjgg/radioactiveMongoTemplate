@@ -15,6 +15,14 @@ Feature: update a mongo record
     When I a person record with name "Pablo" an Id "507f191e810c19729de860ea"
     Then I updateById "507f191e810c19729de860ea" a peson and swap his name to "Miguel"
 
+  # @cleanRecords
+   #Scenario Outline: update by query
+   #  Given a test database with a person collection
+   #  When I create person with age 18 and name "Pablo"
+   #  Then I findAndUpdate name to "Miguel" and age to 19 by "<Query>" and check that <numberOfEntities> was updated
 
+  # Examples:
+  # | Query | numberOfEntities |
+  # | {'name':'Pablo'}|  1  |
 
 

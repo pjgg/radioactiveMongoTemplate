@@ -1,5 +1,6 @@
 package org.radioactiveMongoTemplate.dao
 
+import org.bson.BsonDocument
 import reactivemongo.api.commands.{WriteResult, GetLastError}
 import reactivemongo.api.indexes.Index
 import reactivemongo.bson.BSONDocument
@@ -17,7 +18,7 @@ trait RadioactiveMongoTemplate[E,K]  {
 
   def findByIds(ids: K*)(implicit ec: ExecutionContext): Future[List[E]]
 
-  def findAndUpdate(query: BSONDocument, update: BSONDocument, sort: BSONDocument = BSONDocument.empty,
+  def findAndUpdate(query: BSONDocument, update: E, sort: BSONDocument = BSONDocument.empty,
                     fetchNewObject: Boolean = false,upsert: Boolean = false)(implicit ec: ExecutionContext): Future[Option[E]]
 
   def count(query: BSONDocument = BSONDocument.empty)(implicit ec: ExecutionContext): Future[Int]
@@ -27,10 +28,10 @@ trait RadioactiveMongoTemplate[E,K]  {
   def insert(entity: E, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext):Future[WriteResult]
 
   def update(query: BSONDocument,update: E,
-             upsert: Boolean = false,multi: Boolean = false, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[WriteResult]
+             upsert: Boolean = false,multi: Boolean = false, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[UpsertSimpleRespone[K]]
 
   def updateById(id: K,update: E, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[SimpleRespone[K]]
-  
+
   def retrieveIndexes()(implicit ec: ExecutionContext): Future[List[Index]]
 
   def ensureIndexes(index: Index)(implicit ec: ExecutionContext): Future[Boolean]
@@ -52,4 +53,12 @@ trait RadioactiveMongoTemplate[E,K]  {
                   bulkByteSize: Int = MongoContext.maxBsonSize)(implicit ec: ExecutionContext): Future[Int]
 }
 
-case class SimpleRespone[K](code:Option[Int], hasErrors:Boolean, msg:Option[String], id:Option[K])
+sealed trait TemplateResponse {
+  def code:Option[Int]
+  def hasErrors:Boolean
+  def msg:Option[String]
+}
+
+case class SimpleRespone[K](val code:Option[Int], val hasErrors:Boolean, val msg:Option[String], id:Option[K]) extends TemplateResponse
+
+case class UpsertSimpleRespone[K](val code:Option[Int], val hasErrors:Boolean, val msg:Option[String], upsertIds:List[K]) extends TemplateResponse
