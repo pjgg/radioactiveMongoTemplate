@@ -9,5 +9,6 @@ import org.junit.runner.RunWith
   "src/test/resources/org/radioactiveMongoTemplate/crud/test/find.feature",
   "src/test/resources/org/radioactiveMongoTemplate/crud/test/delete.feature",
   "src/test/resources/org/radioactiveMongoTemplate/crud/test/update.feature"
+  //"src/test/resources/org/radioactiveMongoTemplate/crud/test/queries.feature"
 ))
 class RunCukesTest

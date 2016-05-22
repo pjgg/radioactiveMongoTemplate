@@ -1,13 +1,12 @@
 package org.radioactiveMongoTemplate.crud.test
 
-import cucumber.api.{Scenario, PendingException}
-import cucumber.api.scala.{EN, ScalaDsl}
-import org.radioactiveMongoTemplate.crud.util.{Person, MongoTemplateUtilsTest}
+
+import cucumber.api.scala.{EN}
+import org.radioactiveMongoTemplate.crud.util.{ Person, MongoTemplateUtilsTest}
 import org.junit.Assert._
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.words.ShouldVerb
-import reactivemongo.api.commands.UpdateWriteResult
 import reactivemongo.bson.BSONObjectID
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -41,7 +40,7 @@ class InsertStepDefinitions extends Matchers with ShouldVerb with ScalaFutures w
 
   When("""^I a person record with name "([^"]*)" an Id "([^"]*)"$"""){
     (name:String, id:String) =>
-      val person = Person(_id = BSONObjectID(id),name = name, age = 18)
+      val person = Person(_id = Option(BSONObjectID(id)),name = name, age = 18)
       val errors = personDao.insert(person).map(result => result.hasErrors)
       whenReady(errors, timeout(5 seconds)){
         errors => errors should be (false)
@@ -62,7 +61,7 @@ class InsertStepDefinitions extends Matchers with ShouldVerb with ScalaFutures w
 
   When("""^I upsert a person record with name "([^"]*)" and Id "([^"]*)"$"""){
     (name:String, id:String) =>
-      val person = Person(_id= BSONObjectID(id), name = name, age = 18)
+      val person = Person(_id= Option(BSONObjectID(id)), name = name, age = 18)
       val result = personDao.save(person)
       whenReady(result, timeout(5 seconds)){
         result => {
@@ -82,5 +81,20 @@ class InsertStepDefinitions extends Matchers with ShouldVerb with ScalaFutures w
       }
 
   }
+
+  When("""^I insert (\d+) of people with name "([^"]*)" and age of (\d+)$"""){
+    (amount:Int, name:String, age:Int) =>
+
+      var people = Set[Person]()
+      for(i <- 1 to amount) {
+        people += Person(name = name, age = age)
+      }
+
+      val amtInserted = personDao.bulkInsert(people).map(amountInserted => amountInserted)
+      whenReady(amtInserted, timeout(5 seconds)){
+        result => assertTrue(result == amount)
+      }
+  }
+
 
 }

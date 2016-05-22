@@ -1,6 +1,5 @@
 package org.radioactiveMongoTemplate.dao
 
-import org.bson.BsonDocument
 import reactivemongo.api.commands.{WriteResult, GetLastError}
 import reactivemongo.api.indexes.Index
 import reactivemongo.bson.BSONDocument
@@ -18,8 +17,7 @@ trait RadioactiveMongoTemplate[E,K]  {
 
   def findByIds(ids: K*)(implicit ec: ExecutionContext): Future[List[E]]
 
-  def findAndUpdate(query: BSONDocument, update: E, sort: BSONDocument = BSONDocument.empty,
-                    fetchNewObject: Boolean = false,upsert: Boolean = false)(implicit ec: ExecutionContext): Future[Option[E]]
+  def findAndUpdate(query: BSONDocument, update: E, sort: BSONDocument = BSONDocument.empty,upsert: Boolean = false)(implicit ec: ExecutionContext): Future[Option[E]]
 
   def count(query: BSONDocument = BSONDocument.empty)(implicit ec: ExecutionContext): Future[Int]
 

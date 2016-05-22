@@ -1,6 +1,5 @@
 package org.radioactiveMongoTemplate.dao
 
-import org.bson.BsonDocument
 import reactivemongo.api.QueryOpts
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.api.indexes.Index
@@ -43,9 +42,8 @@ abstract class AbstractMongoTemplate[E,K]
    collection.find(BSONDocument("$in" -> ids)).cursor[E](MongoContext.connectionOptions.readPreference).collect[List]()
   }
 
-  def findAndUpdate(query: BSONDocument, update: E, sort: BSONDocument = BSONDocument.empty,
-                     fetchNewObject: Boolean = false,upsert: Boolean = false)(implicit ec: ExecutionContext): Future[Option[E]] ={
-    collection.findAndUpdate(query, update, fetchNewObject, upsert).map(_.result[E])
+  def findAndUpdate(query: BSONDocument, update: E, sort: BSONDocument = BSONDocument.empty, upsert: Boolean = false)(implicit ec: ExecutionContext):Future[Option[E]] ={
+    collection.findAndUpdate(query, update, true, upsert).map(_.result[E])
   }
 
   def count(query: BSONDocument = BSONDocument.empty)(implicit ec: ExecutionContext): Future[Int] = {
@@ -61,9 +59,7 @@ abstract class AbstractMongoTemplate[E,K]
     collection.insert(entity, writeConcern).map( writeResult => writeResult)
   }
 
-  def update(query: BSONDocument,update: E, upsert: Boolean = false,multi: Boolean = false, writeConcern: GetLastError
-  = MongoContext
-    .connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[UpsertSimpleRespone[K]] = {
+  def update(query: BSONDocument,update: E, upsert: Boolean = false,multi: Boolean = false, writeConcern: GetLastError = MongoContext.connectionOptions.writeConcern)(implicit ec: ExecutionContext): Future[UpsertSimpleRespone[K]] = {
     collection.update(query, update, writeConcern, upsert, multi).map(updateWriteResult=>makeUpsertSimpleResponse(updateWriteResult))
   }
 
