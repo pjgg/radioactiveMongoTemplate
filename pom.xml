@@ -318,6 +318,7 @@
             </activation>
             <properties>
                 <repoToken>fakeToken</repoToken>
+                <travisJobId>fakeTravisJobId</travisJobId>
             </properties>
             <build>
                 <testResources>
@@ -349,14 +350,53 @@
                         </executions>
                     </plugin>
 
+                    <!--<plugin>
+                        <groupId>org.scoverage</groupId>
+                        <artifactId>scoverage-maven-plugin</artifactId>
+                        <version>1.1.0</version>
+                        <configuration>
+                            <highlighting>true</highlighting>
+                        </configuration>
+                    </plugin>
+-->
+
+
                     <plugin>
                         <groupId>org.eluder.coveralls</groupId>
                         <artifactId>coveralls-maven-plugin</artifactId>
                         <version>4.1.0</version>
                         <configuration>
                             <repoToken>${repoToken}</repoToken>
+                            <coberturaReports>
+                                <coberturaReport>
+                                    ${basedir}/target/coverage.xml
+                                </coberturaReport>
+                            </coberturaReports>
+                            <sourceEncoding>UTF-8</sourceEncoding>
+                            <serviceName>travis-ci</serviceName>
+                            <serviceJobId>${travisJobId} </serviceJobId>
                         </configuration>
                     </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>cobertura-maven-plugin</artifactId>
+                        <version>2.7</version>
+                        <configuration>
+                            <format>xml</format>
+                            <maxmem>256m</maxmem>
+                            <!-- aggregated reports for multi-module projects -->
+                            <aggregate>true</aggregate>
+                            <outputDirectory>${basedir}/target</outputDirectory>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.19.1</version>
+                    </plugin>
+
                 </plugins>
             </build>
 
@@ -380,6 +420,7 @@
                     </plugin>
                 </plugins>
             </reporting>
+
         </profile>
 
     </profiles>
