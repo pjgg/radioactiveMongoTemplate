@@ -1,6 +1,6 @@
 sudo: required
 language: java
-script: mvn clean install -P acceptance
+script: mvn clean install -P acceptance scoverage:report
 jdk:
   - oraclejdk8
 services:
