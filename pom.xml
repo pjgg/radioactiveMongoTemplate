@@ -369,7 +369,7 @@
                             <repoToken>${repoToken}</repoToken>
                             <coberturaReports>
                                 <coberturaReport>
-                                    ${basedir}/target/coverage.xml
+                                    ${basedir}/target/coveralls.xml
                                 </coberturaReport>
                             </coberturaReports>
                             <sourceEncoding>UTF-8</sourceEncoding>
