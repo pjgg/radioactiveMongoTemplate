@@ -10,7 +10,7 @@ branches:
 install: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script: mvn test -P acceptance
 after_success:
-  - mvn coveralls:report -DrepoToken=$repoToken -DtravisJobId=$TRAVIS_JOB_ID
+  - mvn cobertura:cobertura coveralls:report -DrepoToken=$repoToken -DtravisJobId=$TRAVIS_JOB_ID
 notifications:
   email:
   - pablo.gonzalez.granados@gmail.com

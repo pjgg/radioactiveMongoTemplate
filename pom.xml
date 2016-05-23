@@ -367,9 +367,12 @@
                         <version>4.1.0</version>
                         <configuration>
                             <repoToken>${repoToken}</repoToken>
+                            <sourceDirectories>
+                                <sourceDirectory>src/main/scala</sourceDirectory>
+                            </sourceDirectories>
                             <coberturaReports>
                                 <coberturaReport>
-                                    ${basedir}/target/coveralls.json
+                                    ${basedir}/target/coverage.xml
                                 </coberturaReport>
                             </coberturaReports>
                             <sourceEncoding>UTF-8</sourceEncoding>
