@@ -1,6 +1,6 @@
 sudo: required
 language: java
-script: mvn clean -P acceptance scoverage:report
+script: mvn clean install -P acceptance
 jdk:
   - oraclejdk8
 services:
@@ -9,7 +9,7 @@ branches:
  only:
   - master
 after_success:
-  - coveralls
+  - mvn coveralls:report
 notifications:
   email:
   - pablo.gonzalez.granados@gmail.com
