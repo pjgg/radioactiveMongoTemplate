@@ -152,6 +152,12 @@
             <version>3.3.0</version>
         </dependency>
 
+        <!-- coverage -->
+        <dependency>
+            <groupId>org.scoverage</groupId>
+            <artifactId>maven-scoverage-plugin</artifactId>
+            <version>0.99.10</version>
+        </dependency>
 
     </dependencies>
 
@@ -340,8 +346,58 @@
                         </executions>
                     </plugin>
 
+                    <plugin>
+                        <groupId>org.scoverage</groupId>
+                        <artifactId>scoverage-maven-plugin</artifactId>
+                        <version>1.1.0</version>
+                        <configuration>
+                            <highlighting>true</highlighting>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.19.1</version>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>net.alchim31.maven</groupId>
+                        <artifactId>scala-maven-plugin</artifactId>
+                        <version>3.2.2</version>
+                        <executions>
+                            <execution>
+                                <id>default-sbt-compile</id>
+                                <goals>
+                                    <goal>compile</goal>
+                                    <goal>testCompile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
+
+            <reporting>
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.scoverage</groupId>
+                        <artifactId>scoverage-maven-plugin</artifactId>
+                        <version>1.1.0</version>
+                        <configuration>
+                            <highlighting>true</highlighting>
+                        </configuration>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>integration-report</report> <!-- select only one report from: report, integration-report and report-only reporters -->
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+                </plugins>
+            </reporting>
         </profile>
 
     </profiles>
