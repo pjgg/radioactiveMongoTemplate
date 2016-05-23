@@ -1,6 +1,6 @@
 package org.radioactiveMongoTemplate.crud.util
 
-import org.radioactiveMongoTemplate.dao.AbstractMongoTemplate
+import org.radioactiveMongoTemplate.dao.{AbstractMongoTemplate}
 import reactivemongo.bson.BSONObjectID
 import scala.concurrent.ExecutionContext.Implicits.global
 

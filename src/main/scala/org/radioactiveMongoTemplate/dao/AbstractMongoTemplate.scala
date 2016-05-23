@@ -13,7 +13,7 @@ abstract class AbstractMongoTemplate[E,K]
 (implicit entityReader: BSONDocumentReader[E], entityWriter: BSONDocumentWriter[E],
  idWriter: BSONWriter[K, _ <: BSONValue],
  idReader: BSONReader[_ <: BSONValue, K],
-  ec: ExecutionContext) extends RadioactiveMongoTemplate[E,K] {
+  ec: ExecutionContext) {
 
   val db = MongoContext.connection(dbName)
 
