@@ -8,6 +8,8 @@ services:
 branches:
  only:
   - master
+after_success:
+  - coveralls
 notifications:
   email:
   - pablo.gonzalez.granados@gmail.com
