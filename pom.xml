@@ -369,7 +369,7 @@
                             <repoToken>${repoToken}</repoToken>
                             <coberturaReports>
                                 <coberturaReport>
-                                    ${basedir}/target/coveralls.xml
+                                    ${basedir}/target/coveralls.json
                                 </coberturaReport>
                             </coberturaReports>
                             <sourceEncoding>UTF-8</sourceEncoding>
@@ -402,7 +402,6 @@
 
             <reporting>
                 <plugins>
-
                     <plugin>
                         <groupId>org.scoverage</groupId>
                         <artifactId>scoverage-maven-plugin</artifactId>
