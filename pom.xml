@@ -385,13 +385,7 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>cobertura-maven-plugin</artifactId>
                         <version>2.7</version>
-                        <configuration>
-                            <format>xml</format>
-                            <maxmem>256m</maxmem>
-                            <!-- aggregated reports for multi-module projects -->
-                            <aggregate>true</aggregate>
-                            <outputDirectory>${basedir}/target</outputDirectory>
-                        </configuration>
+
                     </plugin>
 
                     <plugin>
