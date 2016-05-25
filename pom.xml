@@ -2,13 +2,32 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.reactivemongo</groupId>
+    <groupId>com.github.pjgg</groupId>
     <artifactId>radioactiveMongoTemplate</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>RadioactiveMongoTemplate</name>
+    <description>Reactive mongo DAO</description>
+    <url>https://github.com/pjgg/radioactiveMongoTemplate</url>
+    <developers>
+        <developer>
+            <id>pjgg</id>
+            <name>Pablo Gonzalez</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
 
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>Happy coding!</comments>
+        </license>
+    </licenses>
 
     <prerequisites>
         <maven>3.0.4</maven>
@@ -153,6 +172,20 @@
             <groupId>org.scoverage</groupId>
             <artifactId>maven-scoverage-plugin</artifactId>
             <version>0.99.10</version>
+        </dependency>
+
+        <!-- Release to maven Central-->
+        <dependency>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <type>maven-plugin</type>
         </dependency>
 
     </dependencies>
@@ -411,5 +444,58 @@
 
         </profile>
 
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>2.3.2</version>
+                    </plugin>
+
+
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+
     </profiles>
+
+    <scm>
+        <connection>scm:git:https://github.com/pjgg/radioactiveMongoTemplate.git</connection>
+        <developerConnection>scm:git@github.com:pjgg/radioactiveMongoTemplate.git</developerConnection>
+        <url>https://github.com/pjgg/radioactiveMongoTemplate</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+
 </project>
