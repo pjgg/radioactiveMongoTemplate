@@ -1,5 +1,5 @@
 # RadioactiveMongoTemplate
-Status: [![Build Status](https://travis-ci.org/pjgg/radioactiveMongoTemplate.svg?branch=master)](https://travis-ci.org/pjgg/radioactiveMongoTemplate)
+[![Build Status](https://travis-ci.org/pjgg/radioactiveMongoTemplate.svg?branch=master)](https://travis-ci.org/pjgg/radioactiveMongoTemplate)
 [![Coverage Status](https://coveralls.io/repos/github/pjgg/radioactiveMongoTemplate/badge.svg?branch=master)](https://coveralls.io/github/pjgg/radioactiveMongoTemplate?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.pjgg/radioactiveMongoTemplate/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.pjgg/radioactiveMongoTemplate/)
 
