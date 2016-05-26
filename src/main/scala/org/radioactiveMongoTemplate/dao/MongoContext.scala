@@ -13,14 +13,14 @@ object MongoContext {
   private val conf = ConfigFactory.load()
 
   val connectionOptions = MongoConnectionOptions(
-    conf.getInt("connectTimeoutMS"),
-    Option(conf.getString("authSource")),
-    conf.getBoolean("sslEnabled"),
-    conf.getBoolean("sslAllowsInvalidCert"),
+    conf.getInt("radioactiveMongoTemplate.connectTimeoutMS"),
+    Option(conf.getString("radioactiveMongoTemplate.authSource")),
+    conf.getBoolean("radioactiveMongoTemplate.sslEnabled"),
+    conf.getBoolean("radioactiveMongoTemplate.sslAllowsInvalidCert"),
     getAuthMethod,
-    conf.getBoolean("tcpNoDelay"),
-    conf.getBoolean("keepAlive"),
-    conf.getInt("nbChannelsPerNode"),
+    conf.getBoolean("radioactiveMongoTemplate.tcpNoDelay"),
+    conf.getBoolean("radioactiveMongoTemplate.keepAlive"),
+    conf.getInt("radioactiveMongoTemplate.nbChannelsPerNode"),
     getWriteConcern,
     getReadPreference
   )
@@ -32,7 +32,7 @@ object MongoContext {
    val maxBsonSize = getMaxBsonSize().getOrElse(6000000)
 
   private def getAuthMethod():AuthenticationMode={
-    val auth:String = conf.getString("authMode")
+    val auth:String = conf.getString("radioactiveMongoTemplate.authMode")
     auth match {
       case "ScramSha1Authentication" => ScramSha1Authentication
       case _ => CrAuthentication
@@ -40,7 +40,7 @@ object MongoContext {
   }
 
   private def getWriteConcern():GetLastError = {
-    val writeConcern:String = conf.getString("writeConcern")
+    val writeConcern:String = conf.getString("radioactiveMongoTemplate.writeConcern")
     writeConcern match {
       case "Acknowledged" => WriteConcern.Acknowledged
       case "Journaled" => WriteConcern.Journaled
@@ -50,7 +50,7 @@ object MongoContext {
   }
 
   private def getReadPreference():ReadPreference={
-    val readPreference:String = conf.getString("readPreference")
+    val readPreference:String = conf.getString("radioactiveMongoTemplate.readPreference")
     readPreference match {
       case "primaryPreferred" => ReadPreference.primaryPreferred
       case "secondary" => ReadPreference.secondary
@@ -61,17 +61,17 @@ object MongoContext {
   }
 
   private def getMaxBulkSize():Option[Int] = {
-    val maxBulkSize = conf.getInt("maxBulkSize")
+    val maxBulkSize = conf.getInt("radioactiveMongoTemplate.maxBulkSize")
     if(maxBulkSize == 0) None else Some(maxBulkSize)
   }
 
   private def getMaxBsonSize():Option[Int] = {
-    val maxBsonSize = conf.getInt("maxBsonSize")
+    val maxBsonSize = conf.getInt("radioactiveMongoTemplate.maxBsonSize")
     if(maxBsonSize == 0) None else Some(maxBsonSize)
   }
 
   private def getHosts(): java.util.List[String] = {
-    val l = conf.getStringList("hosts").toList
+    val l = conf.getStringList("radioactiveMongoTemplate.hosts").toList
     if(l.isEmpty) List("localhost:27017") else l
   }
 }
